@@ -1,57 +1,43 @@
 import Image from 'next/image'
+import muxBlurHash from "@mux/blurhash";
+import Player from "./player";
 import styles from './page.module.css'
 
-export default function Home() {
+async function getVideo () {
+  const playbackId = "FuJSYrK0014ec2LPnm11bzC2MAySAQPqA";
+  const { blurHashBase64, sourceWidth, sourceHeight } = await muxBlurHash(playbackId);
+  const aspectRatio = `${16 / 9}`;
+
+  return {
+    playbackId,
+    aspectRatio,
+    placeholder: blurHashBase64,
+  }
+}
+
+export default async function Home() {
+  /*
+   *  This async code runs server-side. It's a new React Server Component thing
+   */
+  const { playbackId, placeholder, aspectRatio } = await getVideo();
+
   return (
     <div className={styles.container}>
-      <main className={styles.main}>
+      <main>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js 13!</a>
+          Next 13 + Mux Player
         </h1>
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
+        <div className={styles.playerWrapper}>
+          <Player
+            playbackId={playbackId}
+            placeholder={placeholder}
+            aspectRatio={aspectRatio}
+          />
+         </div>
 
-        <div className={styles.grid}>
-          <a href="https://beta.nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js 13</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Explore the Next.js 13 playground.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/templates/next.js/app-directory?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>Deploy your Next.js site to a public URL with Vercel.</p>
-          </a>
-        </div>
+         <p className={styles.message}>Content below the player</p>
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
     </div>
   )
 }
