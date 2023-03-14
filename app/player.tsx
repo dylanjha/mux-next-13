@@ -16,6 +16,7 @@ export default function Player({
 }: {
   playbackId: string;
   placeholder: string;
+  aspectRatio: string;
 }) {
   return (
     <MuxPlayer
