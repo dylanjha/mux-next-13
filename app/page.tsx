@@ -6,7 +6,7 @@ import styles from './page.module.css'
 async function getVideo () {
   const playbackId = "FuJSYrK0014ec2LPnm11bzC2MAySAQPqA";
   const { blurHashBase64, sourceWidth, sourceHeight } = await muxBlurHash(playbackId);
-  const aspectRatio = `${16 / 9}`;
+  const aspectRatio = `${sourceWidth / sourceHeight}`;
 
   return {
     playbackId,
